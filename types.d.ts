@@ -237,6 +237,18 @@ type IdeaKeyword = {
    position:number
 }
 
+type URLInspectionResult = {
+   inspectionUrl: string,
+   indexStatus: string,
+   coverageState: string,
+   robotsTxtState: string,
+   indexingState: string,
+   lastCrawlTime: string,
+   pageFetchState: string,
+   crawledAs: string,
+   inspectedAt: string,
+}
+
 type scraperExtractedItem = {
    title: string,
    url: string,
