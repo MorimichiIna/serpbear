@@ -119,6 +119,8 @@ type SettingsType = {
    adwords_developer_token?: string,
    adwords_account_id?: string,
    keywordsColumns: string[]
+   dataforseo_login?: string,
+   dataforseo_password?: string,
 }
 
 type KeywordSCDataChild = {
@@ -235,6 +237,20 @@ type IdeaKeyword = {
    added: number,
    updated: number,
    position:number
+}
+
+type CompetitorKeyword = {
+   keyword: string,
+   position: number,
+   searchVolume: number,
+   url: string,
+}
+
+type CompetitorData = {
+   competitorDomain: string,
+   totalCount: number,
+   keywords: CompetitorKeyword[],
+   fetchedAt: string,
 }
 
 type URLInspectionResult = {

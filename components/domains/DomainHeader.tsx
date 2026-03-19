@@ -27,6 +27,7 @@ const DomainHeader = (
    const isInsight = router.pathname === '/domain/insight/[slug]';
    const isIdeas = router.pathname === '/domain/ideas/[slug]';
    const isIndexing = router.pathname === '/domain/indexing/[slug]';
+   const isCompetitors = router.pathname === '/domain/competitors/[slug]';
 
    const daysName = (dayKey:string) => dayKey.replace('three', '3').replace('seven', '7').replace('thirty', '30').replace('Days', ' Days');
    const buttonStyle = 'leading-6 inline-block px-2 py-2 text-gray-500 hover:text-gray-700';
@@ -101,18 +102,27 @@ const DomainHeader = (
                   </a>
                </Link>
             </li>
+            <li className={`${tabStyle} ${router.pathname === '/domain/competitors/[slug]' ? 'bg-white border border-b-0 font-semibold' : ''}`}>
+               <Link href={`/domain/competitors/${domain.slug}`} passHref={true}>
+                  <a className='px-4 py-2 inline-block'>
+                     <Icon type="target" size={13} classes='hidden lg:inline-block' />
+                     <span className='text-xs lg:text-sm lg:ml-2'>Competitors</span>
+                  </a>
+               </Link>
+            </li>
          </ul>
          <div className={'flex mb-0 lg:mb-1 lg:mt-3'}>
-            {!isInsight && !isIndexing && <button className={`${buttonStyle} lg:hidden`} onClick={() => setShowOptions(!showOptions)}>
+            {!isInsight && !isIndexing && !isCompetitors && (
+               <button className={`${buttonStyle} lg:hidden`} onClick={() => setShowOptions(!showOptions)}>
                <Icon type='dots' size={20} />
             </button>
-            }
-            {(isInsight || isIndexing) && <button className={`${buttonStyle} lg:hidden invisible`}>x</button>}
+            )}
+            {(isInsight || isIndexing || isCompetitors) && <button className={`${buttonStyle} lg:hidden invisible`}>x</button>}
             <div
             className={`hidden w-40 ml-[-70px] lg:block absolute mt-10 bg-white border border-gray-100 z-40 rounded 
             lg:z-auto lg:relative lg:mt-0 lg:border-0 lg:w-auto lg:bg-transparent`}
             style={{ display: showOptions ? 'block' : undefined }}>
-               {!isInsight && !isIndexing && (
+               {!isInsight && !isIndexing && !isCompetitors && (
                   <button
                   className={`domheader_action_button relative ${buttonStyle}`}
                   aria-pressed="false"
@@ -120,7 +130,7 @@ const DomainHeader = (
                      <Icon type='download' size={20} /><i className={`${buttonLabelStyle}`}>Export as csv</i>
                   </button>
                )}
-               {!isConsole && !isInsight && !isIdeas && !isIndexing && (
+               {!isConsole && !isInsight && !isIdeas && !isIndexing && !isCompetitors && (
                   <button
                   className={`domheader_action_button relative ${buttonStyle} lg:ml-3`}
                   aria-pressed="false"
@@ -136,7 +146,7 @@ const DomainHeader = (
                   <i className={`${buttonLabelStyle}`}>Domain Settings</i>
                </button>
             </div>
-            {!isConsole && !isInsight && !isIdeas && !isIndexing && (
+            {!isConsole && !isInsight && !isIdeas && !isIndexing && !isCompetitors && (
                <button
                data-testid="add_keyword"
                className={'ml-2 inline-block text-blue-700 font-bold text-sm lg:px-4 lg:py-2'}

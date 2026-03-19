@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SearchConsoleSettings from './SearchConsoleSettings';
 import AdWordsSettings from './AdWordsSettings';
+import DataForSEOSettings from './DataForSEOSettings';
 import Icon from '../common/Icon';
 
 type IntegrationSettingsProps = {
@@ -30,6 +31,11 @@ const IntegrationSettings = ({ settings, settingsError, updateSettings, performU
                onClick={() => setCurrentTab('adwords')}>
                   <Icon type='adwords' size={14} /> Google Ads
                </li>
+               <li
+               className={`${tabStyle} ${currentTab === 'dataforseo' ? ' bg-blue-50 text-blue-600' : ''}`}
+               onClick={() => setCurrentTab('dataforseo')}>
+                  <Icon type='search' size={14} /> DataForSEO
+               </li>
             </ul>
          </div>
          <div>
@@ -44,6 +50,9 @@ const IntegrationSettings = ({ settings, settingsError, updateSettings, performU
                performUpdate={performUpdate}
                closeSettings={closeSettings}
                />
+            )}
+            {currentTab === 'dataforseo' && settings && (
+               <DataForSEOSettings settings={settings} updateSettings={updateSettings} />
             )}
          </div>
       </div>

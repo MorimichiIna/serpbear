@@ -50,6 +50,8 @@ const updateSettings = async (req: NextApiRequest, res: NextApiResponse<Settings
       const adwords_client_secret = settings.adwords_client_secret ? cryptr.encrypt(settings.adwords_client_secret.trim()) : '';
       const adwords_developer_token = settings.adwords_developer_token ? cryptr.encrypt(settings.adwords_developer_token.trim()) : '';
       const adwords_account_id = settings.adwords_account_id ? cryptr.encrypt(settings.adwords_account_id.trim()) : '';
+      const dataforseo_login = settings.dataforseo_login ? cryptr.encrypt(settings.dataforseo_login.trim()) : '';
+      const dataforseo_password = settings.dataforseo_password ? cryptr.encrypt(settings.dataforseo_password.trim()) : '';
 
       const securedSettings = {
          ...settings,
@@ -61,6 +63,8 @@ const updateSettings = async (req: NextApiRequest, res: NextApiResponse<Settings
          adwords_client_secret,
          adwords_developer_token,
          adwords_account_id,
+         dataforseo_login,
+         dataforseo_password,
       };
 
       await writeFile(`${process.cwd()}/data/settings.json`, JSON.stringify(securedSettings), { encoding: 'utf-8' });
@@ -90,6 +94,8 @@ export const getAppSettings = async () : Promise<SettingsType> => {
          const adwords_client_secret = settings.adwords_client_secret ? cryptr.decrypt(settings.adwords_client_secret) : '';
          const adwords_developer_token = settings.adwords_developer_token ? cryptr.decrypt(settings.adwords_developer_token) : '';
          const adwords_account_id = settings.adwords_account_id ? cryptr.decrypt(settings.adwords_account_id) : '';
+         const dataforseo_login = settings.dataforseo_login ? cryptr.decrypt(settings.dataforseo_login) : '';
+         const dataforseo_password = settings.dataforseo_password ? cryptr.decrypt(settings.dataforseo_password) : '';
 
          decryptedSettings = {
             ...settings,
@@ -106,6 +112,8 @@ export const getAppSettings = async () : Promise<SettingsType> => {
             adwords_client_secret,
             adwords_developer_token,
             adwords_account_id,
+            dataforseo_login,
+            dataforseo_password,
             scrape_strategy: settings.scrape_strategy || 'basic',
             scrape_pagination_limit: settings.scrape_pagination_limit || 5,
             scrape_smart_full_fallback: settings.scrape_smart_full_fallback || false,
