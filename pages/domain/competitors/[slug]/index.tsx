@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -26,6 +26,8 @@ const CompetitorsPage: NextPage = () => {
    const [maxPosition, setMaxPosition] = useState<string>('10');
    const [resultLimit, setResultLimit] = useState<string>('100');
    const [competitorData, setCompetitorData] = useState<CompetitorData | null>(null);
+   const [savedDomains, setSavedDomains] = useState<string[]>([]);
+   const [selectedDomain, setSelectedDomain] = useState<string>('');
 
    const { data: appSettings } = useFetchSettings();
    const { data: domainsData } = useFetchDomains(router);
@@ -44,6 +46,35 @@ const CompetitorsPage: NextPage = () => {
       return null;
    }, [router.query.slug, domainsData]);
 
+   // Load saved competitor domain list on mount
+   useEffect(() => {
+      const loadList = async () => {
+         try {
+            const res = await fetch(
+               `${window.location.origin}/api/competitors`,
+            );
+            const json = await res.json();
+            if (json.domains) setSavedDomains(json.domains);
+         } catch { /* ignore */ }
+      };
+      loadList();
+   }, []);
+
+   // Load saved data when a saved domain is selected
+   const handleSelectSaved = async (domain: string) => {
+      setSelectedDomain(domain);
+      setCompetitorDomain(domain);
+      try {
+         const res = await fetch(
+            `${window.location.origin}/api/competitors?domain=${domain}`,
+         );
+         const json = await res.json();
+         if (json.data) setCompetitorData(json.data);
+      } catch {
+         toast('Error loading saved data', { icon: '⚠️' });
+      }
+   };
+
    const {
       mutate: fetchKeywords,
       isLoading: fetching,
@@ -55,6 +86,7 @@ const CompetitorsPage: NextPage = () => {
          .replace(/^https?:\/\//, '')
          .replace(/\/.*$/, '');
       setCompetitorDomain(domain);
+      setSelectedDomain(domain);
 
       fetchKeywords(
          {
@@ -70,6 +102,10 @@ const CompetitorsPage: NextPage = () => {
                      `${res.data.keywords.length} keywords fetched`,
                      { icon: '✔️' },
                   );
+                  // Update saved domains list
+                  if (!savedDomains.includes(domain)) {
+                     setSavedDomains((prev) => [...prev, domain]);
+                  }
                }
                if (res.error) {
                   toast(res.error.substring(0, 100), { icon: '⚠️' });
@@ -112,6 +148,25 @@ const CompetitorsPage: NextPage = () => {
                )}
 
                <div className="bg-white border rounded p-4 flex flex-col gap-3">
+                  {savedDomains.length > 0 && (
+                     <div className="flex gap-2 items-center flex-wrap">
+                        <span className="text-xs text-gray-500">Saved:</span>
+                        {savedDomains.map((d) => (
+                           <button
+                              key={d}
+                              className={`px-3 py-1 text-xs rounded-full border
+                                 ${selectedDomain === d
+                                    ? 'bg-blue-700 text-white border-blue-700'
+                                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                                 }`}
+                              onClick={() => handleSelectSaved(d)}
+                           >
+                              {d}
+                           </button>
+                        ))}
+                     </div>
+                  )}
+
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
                      <div className="flex-1">
                         <label className="text-xs text-gray-500 mb-1 block">

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { readFile, writeFile } from 'fs/promises';
+import { readFile, writeFile, readdir } from 'fs/promises';
 import verifyUser from '../../utils/verifyUser';
 import { getAppSettings } from './settings';
 
@@ -46,12 +46,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 const getSavedCompetitorData = async (
    req: NextApiRequest,
-   res: NextApiResponse<CompetitorsRes>,
+   res: NextApiResponse,
 ) => {
    const domain = req.query.domain as string;
+
+   // If no domain specified, return list of saved competitor domains
    if (!domain) {
-      return res.status(400).json({ data: null, error: 'Domain is required.' });
+      try {
+         const dataDir = `${process.cwd()}/data`;
+         const files = await readdir(dataDir);
+         const competitors = files
+            .filter((f) => f.startsWith('COMPETITORS_') && f.endsWith('.json'))
+            .map((f) => f.replace('COMPETITORS_', '').replace('.json', '').replaceAll('-', '.'));
+         return res.status(200).json({ domains: competitors });
+      } catch {
+         return res.status(200).json({ domains: [] });
+      }
    }
+
    const data = await readSavedData(domain);
    return res.status(200).json({ data });
 };
