@@ -253,6 +253,22 @@ type CompetitorData = {
    fetchedAt: string,
 }
 
+type AIOReference = {
+   source: string,
+   domain: string,
+   url: string,
+   title: string,
+}
+
+type AIOResult = {
+   keyword: string,
+   hasAIO: boolean,
+   cited: boolean,
+   text: string,
+   references: AIOReference[],
+   checkedAt: string,
+}
+
 type URLInspectionResult = {
    inspectionUrl: string,
    indexStatus: string,

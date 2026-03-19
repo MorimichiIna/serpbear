@@ -27,7 +27,8 @@ const Sidebar = ({ domains, showAddModal } : SidebarProps) => {
                                         rounded-r-none ${((`/domain/${d.slug}` === router.asPath || `/domain/console/${d.slug}` === router.asPath
                                         || `/domain/insight/${d.slug}` === router.asPath || `/domain/ideas/${d.slug}` === router.asPath
                                         || `/domain/indexing/${d.slug}` === router.asPath
-                                        || `/domain/competitors/${d.slug}` === router.asPath)
+                                        || `/domain/competitors/${d.slug}` === router.asPath
+                                        || `/domain/aio/${d.slug}` === router.asPath)
                                         ? 'bg-white text-zinc-800 border border-r-0' : 'text-zinc-500')}`}>
                                           <img
                                           className={' inline-block mr-1'}
